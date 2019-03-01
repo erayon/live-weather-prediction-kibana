@@ -43,7 +43,7 @@ class HistorialWeatherData:
             return None
         return dataframe
 
-    def HistoricalData(self,start_date,end_date):
+    def HistoricalData(self,stations,start_date,end_date):
         """
         Define stations or list of stations : 
             e.i : stations = ["IDUBLINF3", "IDUBLINF2", "ICARRAIG2", "IGALWAYR2", "IBELFAST4", "ILONDON59", "IILEDEFR28"]
@@ -62,7 +62,6 @@ class HistorialWeatherData:
         dates = list(rrule.rrule(rrule.DAILY, dtstart=start, until=end))
 
         # Create a list of stations here to download data for
-        stations = ['IKOLKATA3']
         # Set a backoff time in seconds if a request fails
         backoff_time = 10
         data = {}
@@ -101,9 +100,7 @@ class HistorialWeatherData:
         data_raw['Dewpoint'] = data_raw['DewpointC'].astype(float)
         data_raw['wind'] = data_raw['WindSpeedKMH']
         data = data_raw.loc[:, ['date', 'station', 'temp', 'rain', 'total_rain', 'humidity','Dewpoint']]
-        data.to_pickle('{}_weather_data.pckl'.format(station))
+        return data
+        #data.to_pickle('{}_weather_data.pckl'.format(station))
 
-if __name__ == "__main__":
-    hwd = HistorialWeatherData()
-    hwd.HistoricalData('2018-01-01','2018-12-12')
 
