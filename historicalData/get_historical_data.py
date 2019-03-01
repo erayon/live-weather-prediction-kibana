@@ -90,8 +90,8 @@ class HistorialWeatherData:
                 # Add each processed date to the overall data
                 data[station].append(weather_data)
             # Finally combine all of the individual days and output to CSV for analysis.
-            pd.concat(data[station]).to_csv("{}_weather.csv".format(station),index=False)
-        data_raw = pd.read_csv('{}_weather.csv'.format(station))
+            pd.concat(data[station]).to_pickle("{}_weather_full_data.pckl".format(station))
+        data_raw = pd.read_pickle('{}_weather_full_data.pckl'.format(station))
         # Give the variables some friendlier names and convert types as necessary.
         data_raw['temp'] = data_raw['TemperatureC'].astype(float)
         data_raw['rain'] = data_raw['HourlyPrecipMM'].astype(float)
@@ -101,9 +101,7 @@ class HistorialWeatherData:
         data_raw['Dewpoint'] = data_raw['DewpointC'].astype(float)
         data_raw['wind'] = data_raw['WindSpeedKMH']
         data = data_raw.loc[:, ['date', 'station', 'temp', 'rain', 'total_rain', 'humidity','Dewpoint']]
-        return data
-
-
+        data.to_pickle('{}_weather_data.pckl'.format(station))
 
 if __name__ == "__main__":
     hwd = HistorialWeatherData()
